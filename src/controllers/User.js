@@ -1,4 +1,4 @@
-const users = require('../mocks/users');
+let users = require('../mocks/users');
 
 module.exports = {
   listUsers: (request, response) => {
@@ -40,5 +40,20 @@ module.exports = {
     users.push(newUser);
 
     response.send(200, newUser);
-  }
+  },
+
+  updateUser: (request, response) => {
+    const { id } = request.params;
+    const { name } = request.body;
+
+    const userIndex = users.findIndex(user => user.id === +id);
+
+    if (userIndex === -1) {
+      return response.send(400, { error: 'User not found' });
+    }
+
+    users[userIndex] = { id, name };
+
+    return response.send(200, { id, name });
+  },
 }
