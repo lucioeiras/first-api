@@ -43,10 +43,10 @@ module.exports = {
   },
 
   updateUser: (request, response) => {
-    const { id } = request.params;
+    const id = Number(request.params.id);
     const { name } = request.body;
 
-    const userIndex = users.findIndex(user => user.id === +id);
+    const userIndex = users.findIndex(user => user.id === id);
 
     if (userIndex === -1) {
       return response.send(400, { error: 'User not found' });
@@ -55,5 +55,19 @@ module.exports = {
     users[userIndex] = { id, name };
 
     return response.send(200, { id, name });
+  },
+
+  deleteUser: (request, response) => {
+    const id = Number(request.params.id);
+
+    const usersExists = users.find(user => user.id === id);
+
+    if (!usersExists) {
+      return response.send(400, { error: 'User not found' });
+    }
+
+    users = users.filter(user => user.id !== id);
+
+    return response.send(200);
   },
 }
